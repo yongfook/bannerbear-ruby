@@ -10,6 +10,21 @@ module Bannerbear
       get_response "/account"
     end
 
+    # Images
+
+    def get_image(uid)
+    	get_response "/images/#{uid}"
+    end
+
+    def list_images(params = {:page => 1, :limit => 25})
+    	get_response "/images?#{URI.encode_www_form(params.slice(:page, :limit))}"
+    end
+
+    def create_image(uid, params = {:modifications => [], :webhook_url => nil, :transparent => nil, :render_pdf => nil, :metadata => nil, :synchronous => false})
+    	post_response "/images", params.slice(:modifications, :webhook_url, :transparent, :render_pdf, :metadata).merge({:template => uid}), params[:synchronous]
+    end
+
+
     # Templates
 
     def get_template(uid)
@@ -50,6 +65,7 @@ module Bannerbear
     private
 
     BB_API_ENDPOINT = "https://api.bannerbear.com/v2"
+    BB_API_ENDPOINT_SYNCHRONOUS = "https://sync.api.bannerbear.com/v2"
 
     def get_response(url)
     	response = HTTParty.get("#{BB_API_ENDPOINT}#{url}", timeout: 3, headers: { 'Authorization' => "Bearer #{@api_key}" })
@@ -66,6 +82,26 @@ module Bannerbear
     		}
     	)
     	JSON.parse(response.body)
+    end
+
+    def post_response(url, payload, sync)
+    	endpoint = BB_API_ENDPOINT
+    	timeout = 3
+    	if sync == true
+    		endpoint = BB_API_ENDPOINT_SYNCHRONOUS 
+    		timeout = 15
+    	end
+    	response = HTTParty.post("#{endpoint}#{url}", 
+    		body: payload.to_json,
+    		timeout: timeout,
+    		headers: { 
+    			'Authorization' => "Bearer #{@api_key}",
+    			'Content-Type' => 'application/json'
+    		}
+    	)
+    	body = JSON.parse(response.body)
+    	return {"error" => body['message']} if response.code >= 400
+    	return body
     end
 
   end
