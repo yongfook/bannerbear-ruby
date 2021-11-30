@@ -34,6 +34,16 @@ module Bannerbear
     	get_response "/template_sets?#{URI.encode_www_form(params.slice(:page))}"
     end
 
+    # Video Templates
+
+    def get_video_template(uid)
+    	get_response "/video_templates/#{uid}"
+    end
+
+    def list_video_templates(params = {:page => 1})
+    	get_response "/video_templates?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
 
 
 
