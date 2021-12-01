@@ -1,6 +1,8 @@
 # Bannerbear
 
-Ruby wrapper for [Bannerbear](https://www.bannerbear.com) - an image and video generation service.
+Ruby wrapper for the [Bannerbear API](https://developers.bannerbear.com) - an image and video generation service.
+
+
 
 ## Installation
 
@@ -22,13 +24,78 @@ Or install it yourself as:
 
 ### Create the Client
 
+Get the API key for your project in Bannerbear and create a client.
+
 ```ruby
-BB = Bannerbear::Client.new("<your API key>")
+bb = Bannerbear::Client.new("your API key")
+```
+
+Alternatively you can place your API key in an ENV variable named `BANNERBEAR_API_KEY` and create the client:
+
+```ruby
+bb = Bannerbear::Client.new
 ```
 
 ### Create an Image
 
+To create an image you reference a template uid and a list of modifications. The default is async generation meaning the API will respond with a `pending` status and you can use the `get_image` method to retrieve the final image.
+
+```ruby
+bb.create_image("template uid", :modifications => [
+  {
+    :name => "headline",
+    :text => "Hello World!"
+  },
+  {
+    :name => "photo",
+    :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
+  }
+])
+```
+
+You can also create images synchronously - this will take longer to respond but the image will be delivered in the response:
+
+```ruby
+bb.create_image("template uid", :synchronous => true, :modifications => [
+  {
+    :name => "headline",
+    :text => "Hello World!"
+  },
+  {
+    :name => "photo",
+    :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
+  }
+])
+```
+
+#### Options
+
+- `modifications`: an array of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
+- `webhook_url`: a webhook url to post the final image object to (`string`)
+- `transparent`: render image with a transparent background (`boolean`)
+- `render_pdf`: render a PDF in addition to an image (`boolean`)
+- `metadata`: include any metadata to reference at a later point (`string`)
+
+### Get an Image
+
+```ruby
+bb.get_image("image uid")
+```
+
 ### List all Images
+
+```ruby
+bb.list_images
+```
+
+```ruby
+bb.list_images(:page => 10)
+```
+
+#### Options
+
+- `page`: pagination (`integer`)
+- `limit`: return n images per page (`integer`)
 
 
 ## Contributing
