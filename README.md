@@ -1,6 +1,6 @@
 # Bannerbear
 
-Ruby wrapper for the [Bannerbear](https://www.bannerbear.com) API, an image and video generation service.
+Ruby wrapper for [Bannerbear](https://www.bannerbear.com) - an image and video generation service.
 
 ## Installation
 
@@ -20,7 +20,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Create the Client
+
+```ruby
+BB = Bannerbear::Client.new("<your API key>")
+```
+
+### Create an Image
+
+### List all Images
+
 
 ## Contributing
 
