@@ -35,7 +35,7 @@ module Bannerbear
     end
 
     def create_video(uid, payload = {})
-    	post_response "/videos", payload.slice(:input_media_url, :modifications, :blur, :trim_to_length_in_seconds, :webhook_url, :transparent, :metadata, :frames, :frame_durations, :create_gif_preview).merge({:video_template => uid})
+    	post_response "/videos", payload.slice(:input_media_url, :modifications, :blur, :trim_to_length_in_seconds, :webhook_url, :metadata, :frames, :frame_durations, :create_gif_preview).merge({:video_template => uid})
     end
 
     def update_video(uid, payload = {})
