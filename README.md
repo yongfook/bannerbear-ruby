@@ -193,22 +193,22 @@ bb.create_animated_gif("template uid",
   :frames => [
     [ #frame 1 starts here
       {
-        "name" : "layer1",
-        "text" : "This is my text"
+        :name => "layer1",
+        :text => "This is my text"
       },
       {
-        "name" : "photo",
-        "image_url" : "https://www.pathtomyphoto.com/1.jpg"
+        :name => "photo",
+        :image_url => "https://www.pathtomyphoto.com/1.jpg"
       }
     ],
     [ #frame 2 starts here
       {
-        "name" : "layer1",
-        "text" : "This is my follow up text"
+        :name => "layer1",
+        :text => "This is my follow up text"
       },
       {
-        "name" : "photo",
-        "image_url" : "https://www.pathtomyphoto.com/2.jpg"
+        :name => "photo",
+        :image_url => "https://www.pathtomyphoto.com/2.jpg"
       }
     ]
   ]
@@ -221,10 +221,10 @@ bb.get_movie("movie uid")
 bb.list_movies(:page => 3)
 bb.create_movie(:width => 800, :height => 800, :transition => "pixelize", :inputs => [
   {
-    "asset_url": "https://images.unsplash.com/photo-1635910160061-4b688344bd20?w=500&q=60"
+    :asset_url => "https://images.unsplash.com/photo-1635910160061-4b688344bd20?w=500&q=60"
   },
   {
-    "asset_url": "https://i.imgur.com/fH7a5dO.png"
+    :asset_url => "https://i.imgur.com/fH7a5dO.png"
   }
 ])
 #movie options: width, height, transition, inputs, webhook_url, metadata
