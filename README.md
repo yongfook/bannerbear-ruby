@@ -39,31 +39,36 @@ bb = Bannerbear::Client.new
 To create an image you reference a template uid and a list of modifications. The default is async generation meaning the API will respond with a `pending` status and you can use `get_image` to retrieve the final image.
 
 ```ruby
-bb.create_image("template uid", :modifications => [
-  {
-    :name => "headline",
-    :text => "Hello World!"
-  },
-  {
-    :name => "photo",
-    :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
-  }
-])
+bb.create_image("template uid", 
+  :modifications => [
+    {
+      :name => "headline",
+      :text => "Hello World!"
+    },
+    {
+      :name => "photo",
+      :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
+    }
+  ]
+)
 ```
 
 You can also create images synchronously - this will take longer to respond but the image will be delivered in the response:
 
 ```ruby
-bb.create_image("template uid", :synchronous => true, :modifications => [
-  {
-    :name => "headline",
-    :text => "Hello World!"
-  },
-  {
-    :name => "photo",
-    :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
-  }
-])
+bb.create_image("template uid", 
+  :synchronous => true, 
+  :modifications => [
+    {
+      :name => "headline",
+      :text => "Hello World!"
+    },
+    {
+      :name => "photo",
+      :image_url => "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1000&q=80"
+    }
+  ]
+)
 ```
 
 #### Options
@@ -100,12 +105,15 @@ bb.list_images(:page => 10)
 To create a video you reference a *video template uid*, an input media and a list of modifications. Videos are created async - use `get_video` to retrieve the final video. 
 
 ```ruby
-bb.create_video("video template uid", :input_media_url => "https://www.yourserver.com/videos/awesome_video.mp4", :modifications => [
-  {
-    :name => "headline",
-    :text => "Hello World!"
-  }
-])
+bb.create_video("video template uid", 
+  :input_media_url => "https://www.yourserver.com/videos/awesome_video.mp4", 
+  :modifications => [
+    {
+      :name => "headline",
+      :text => "Hello World!"
+    }
+  ]
+)
 ```
 
 #### Options
@@ -154,7 +162,7 @@ bb.get_template_set("template set uid")
 bb.list_template_sets(:page => 2)
 
 # Video Templates
-bb.get_video_template("template set uid")
+bb.get_video_template("video template uid")
 bb.list_video_templates(:page => 2)
 ```
 
