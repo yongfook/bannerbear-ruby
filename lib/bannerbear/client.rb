@@ -92,6 +92,19 @@ module Bannerbear
       post_response "/animated_gifs", payload.slice(:frames, :input_media_url, :webhook_url, :metadata, :loop, :frame_durations, :fps).merge({:template => uid})
     end
 
+    # Movies
+
+    def get_movie(uid)
+      get_response "/movies/#{uid}"
+    end
+
+    def list_movies(params = {})
+      get_response "/movies?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
+    def create_movie(payload = {})
+      post_response "/movies", payload.slice(:width, :height, :inputs, :transition, :soundtrack_url, :webhook_url, :metadata)
+    end
 
 
     # Templates
