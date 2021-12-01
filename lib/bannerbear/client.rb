@@ -39,7 +39,7 @@ module Bannerbear
     end
 
     def update_video(uid, payload = {})
-      patch_response "/videos/#{uid}", payload.slice(:transcription, :approved)
+      patch_response "/videos", payload.slice(:transcription, :approved).merge({:uid => uid})
     end
 
 
