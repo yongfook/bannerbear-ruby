@@ -151,7 +151,9 @@ module Bannerbear
 
     def get_response(url)
     	response = HTTParty.get("#{BB_API_ENDPOINT}#{url}", timeout: 3, headers: { 'Authorization' => "Bearer #{@api_key}" })
-    	JSON.parse(response.body)
+    	body = JSON.parse(response.body)
+      return {"error" => body['message'], "code" => response.code} if response.code >= 400
+      return body
     end
 
     def patch_response(url, payload)
@@ -163,7 +165,9 @@ module Bannerbear
     			'Content-Type' => 'application/json'
     		}
     	)
-    	JSON.parse(response.body)
+    	body = JSON.parse(response.body)
+      return {"error" => body['message'], "code" => response.code} if response.code >= 400
+      return body
     end
 
     def post_response(url, payload, sync = false)
@@ -182,7 +186,7 @@ module Bannerbear
     		}
     	)
     	body = JSON.parse(response.body)
-    	return {"error" => body['message']} if response.code >= 400
+    	return {"error" => body['message'], "code" => response.code} if response.code >= 400
     	return body
     end
 
