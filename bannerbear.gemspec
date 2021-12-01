@@ -6,8 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jon Yongfook"]
   spec.email         = ["yongfook@gmail.com"]
 
-  spec.summary       = "blep"
-  spec.description   = "blep2"
+  spec.summary       = "Ruby wrapper for the Bannerbear API"
   spec.homepage      = "https://www.bannerbear.com"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
