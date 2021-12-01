@@ -10,6 +10,14 @@ module Bannerbear
       get_response "/account"
     end
 
+    def fonts
+      get_response "/fonts"
+    end
+
+    def effects
+      get_response "/effects"
+    end
+
     # Images
 
     def get_image(uid)
@@ -42,6 +50,19 @@ module Bannerbear
       patch_response "/videos", payload.slice(:transcription, :approved).merge({:uid => uid})
     end
 
+    # Collections
+
+    def get_collection(uid)
+      get_response "/collections/#{uid}"
+    end
+
+    def list_collections(params = {})
+      get_response "/collections?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
+    def create_collection(uid, payload = {})
+      post_response "/collections", payload.slice(:modifications, :webhook_url, :transparent, :metadata).merge({:template_set => uid}), payload[:synchronous]
+    end
 
 
     # Templates
