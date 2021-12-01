@@ -64,6 +64,21 @@ module Bannerbear
       post_response "/collections", payload.slice(:modifications, :webhook_url, :transparent, :metadata).merge({:template_set => uid}), payload[:synchronous]
     end
 
+    # Screenshots
+
+    def get_screenshot(uid)
+      get_response "/screenshots/#{uid}"
+    end
+
+    def list_screenshots(params = {})
+      get_response "/screenshots?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
+    def create_screenshot(url, payload = {})
+      post_response "/screenshots", payload.slice(:width, :height, :mobile, :webhook_url).merge({:url => url}), payload[:synchronous]
+    end
+
+
 
     # Templates
 
