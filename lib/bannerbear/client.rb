@@ -78,6 +78,20 @@ module Bannerbear
       post_response "/screenshots", payload.slice(:width, :height, :mobile, :webhook_url).merge({:url => url}), payload[:synchronous]
     end
 
+    # Animated Gifs
+
+    def get_animated_gif(uid)
+      get_response "/animated_gifs/#{uid}"
+    end
+
+    def list_animated_gifs(params = {})
+      get_response "/animated_gifs?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
+    def create_animated_gif(uid, payload = {})
+      post_response "/animated_gifs", payload.slice(:frames, :input_media_url, :webhook_url, :metadata, :loop, :frame_durations, :fps).merge({:template => uid})
+    end
+
 
 
     # Templates
