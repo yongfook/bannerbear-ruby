@@ -16,12 +16,12 @@ module Bannerbear
     	get_response "/images/#{uid}"
     end
 
-    def list_images(params = {:page => 1, :limit => 25})
+    def list_images(params = {})
     	get_response "/images?#{URI.encode_www_form(params.slice(:page, :limit))}"
     end
 
-    def create_image(uid, params = {:modifications => [], :webhook_url => nil, :transparent => nil, :render_pdf => nil, :metadata => nil, :synchronous => false})
-    	post_response "/images", params.slice(:modifications, :webhook_url, :transparent, :render_pdf, :metadata).merge({:template => uid}), params[:synchronous]
+    def create_image(uid, payload = {})
+    	post_response "/images", payload.slice(:modifications, :webhook_url, :transparent, :render_pdf, :metadata).merge({:template => uid}), payload[:synchronous]
     end
 
     # Videos
@@ -30,12 +30,16 @@ module Bannerbear
     	get_response "/videos/#{uid}"
     end
 
-    def list_videos(params = {:page => 1})
+    def list_videos(params = {})
     	get_response "/videos?#{URI.encode_www_form(params.slice(:page))}"
     end
 
-    def create_video(uid, params = {:input_media_url => nil, :modifications => [], :blur => nil, :trim_to_length_in_seconds => nil, :webhook_url => nil, :metadata => nil, :frames => [], :frame_durations => [], :create_gif_preview => nil})
-    	post_response "/videos", params.slice(:input_media_url, :modifications, :blur, :trim_to_length_in_seconds, :webhook_url, :transparent, :metadata, :frames, :frame_durations, :create_gif_preview).merge({:video_template => uid})
+    def create_video(uid, payload = {})
+    	post_response "/videos", payload.slice(:input_media_url, :modifications, :blur, :trim_to_length_in_seconds, :webhook_url, :transparent, :metadata, :frames, :frame_durations, :create_gif_preview).merge({:video_template => uid})
+    end
+
+    def update_video(uid, payload = {})
+      patch_response "/videos/#{uid}", payload.slice(:transcription, :approved)
     end
 
 
@@ -50,7 +54,7 @@ module Bannerbear
     	patch_response "/templates/#{uid}", payload.slice(:name, :metadata, :tags)
     end
 
-    def list_templates(params = {:page => 1, :tag => nil, :limit => 25, :name => nil})
+    def list_templates(params = {})
     	get_response "/templates?#{URI.encode_www_form(params.slice(:page, :tag, :limit, :name))}"
     end
 
@@ -60,7 +64,7 @@ module Bannerbear
     	get_response "/template_sets/#{uid}"
     end
 
-    def list_template_sets(params = {:page => 1})
+    def list_template_sets(params = {})
     	get_response "/template_sets?#{URI.encode_www_form(params.slice(:page))}"
     end
 
@@ -70,7 +74,7 @@ module Bannerbear
     	get_response "/video_templates/#{uid}"
     end
 
-    def list_video_templates(params = {:page => 1})
+    def list_video_templates(params = {})
     	get_response "/video_templates?#{URI.encode_www_form(params.slice(:page))}"
     end
 
