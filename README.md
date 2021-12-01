@@ -160,6 +160,26 @@ If your video is using the "Multi Overlay" build pack then you can pass in a set
 bb.get_video("video uid")
 ```
 
+### Update a Video
+
+Updating a video is only relevant under specific conditions. Video Templates using the build pack `transcribe` and set to manual approval (via the dashboard) will result in videos that enter a `pending_approval` status. At this point, the video is waiting for approval before final rendering. The purpose of this is to check the transcript is correct, make any changes, and approve the video for rendering.
+
+```ruby
+bb.update_video("video uid",
+  :approved => true,
+  :transcription => [
+    "This is a new transcription",
+    "It must contain the same number of lines",
+    "As the previous transcription"
+  ]
+)
+```
+
+#### Options
+
+- `approved`: approve the video for rendering (`boolean`)
+- `transcription`: an array of strings to represent the new transcription (will overwrite the existing one) (`array`)
+
 ### List all Videos
 
 ```ruby
