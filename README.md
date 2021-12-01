@@ -98,6 +98,7 @@ bb.create_image("template uid",
 - `modifications`: an array of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
 - `webhook_url`: a webhook url to post the final image object to (`string`)
 - `transparent`: render image with a transparent background (`boolean`)
+- `synchronous`: generate the image synchronously (`boolean`)
 - `render_pdf`: render a PDF in addition to an image (`boolean`)
 - `metadata`: include any metadata to reference at a later point (`string`)
 
@@ -169,8 +170,6 @@ bb.list_videos
 
 - `page`: pagination (`integer`)
 
-All other objects on Bannerbear follow a similar pattern to the above core image and video objects.
-
 ### Collections
 
 Create multiple images in one API request.
@@ -187,8 +186,15 @@ bb.create_collection("template set uid",
     }
   ]
 ) 
-#collection options: modifications, webhook_url, metadata, transparent, synchronous
 ```
+
+#### Options for `create_collection`
+
+- `modifications`: an array of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
+- `webhook_url`: a webhook url to post the final collection object to (`string`)
+- `transparent`: render image with a transparent background (`boolean`)
+- `synchronous`: generate the images synchronously (`boolean`)
+- `metadata`: include any metadata to reference at a later point (`string`)
 
 ### Animated Gifs
 
@@ -221,12 +227,21 @@ bb.create_animated_gif("template uid",
     ]
   ]
 ) 
-#animated gif options: frames, frame_durations, input_media_url, fps, loop, webhook_url, metadata
 ```
+
+#### Options for `create_animated_gif`
+
+- `frames`: an array of arrays of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
+- `frame_durations`: an array of times (in seconds) to show each frame (`array`)
+- `input_media_url`: optionally import an external video file to use as part of the gif
+- `fps`: frames per second e.g. 1 (`integer`)
+- `loop`: whether to loop or not (`boolean`)
+- `webhook_url`: a webhook url to post the final gif object to (`string`)
+- `metadata`: include any metadata to reference at a later point (`string`)
 
 ### Movies
 
-Assemble video clips or still images into a single movie with transitions
+Assemble video clips or still images into a single movie with transitions.
 
 ```ruby
 bb.get_movie("movie uid")
@@ -239,8 +254,17 @@ bb.create_movie(:width => 800, :height => 800, :transition => "pixelize", :input
     :asset_url => "https://i.imgur.com/fH7a5dO.png"
   }
 ])
-#movie options: width, height, transition, inputs, webhook_url, metadata
 ```
+
+#### Options for `create_movie`
+
+- `width`: the movie width in pixels (`integer`)
+- `height`: the movie height in pixels (`integer`)
+- `transition`: the transition style: fade, pixelize, slidedown, slideright, slideup, slideleft (`string`)
+- `inputs`: a list of [inputs](https://developers.bannerbear.com/#post-v2-movies) (`array`)
+- `webhook_url`: a webhook url to post the final movie object to (`string`)
+- `metadata`: include any metadata to reference at a later point (`string`)
+
 
 ### Screenshots
 
@@ -253,8 +277,15 @@ bb.create_screenshot("https://www.bannerbear.com/",
   :synchronous => true,
   :width => 1000
 ) 
-#screenshot options: width, height, mobile, webhook_url, synchronous
 ```
+
+#### Options for `create_screenshot`
+
+- `width`: the desired screenshot width in pixels (`integer`)
+- `height`: the desired screenshot height in pixels (`integer`)
+- `synchronous`: generate the screenshot synchronously (`boolean`)
+- `mobile`: use a mobile user agent
+- `webhook_url`: a webhook url to post the final screenshot object to (`string`)
 
 ### Templates
 
