@@ -34,6 +34,14 @@ Alternatively you can place your API key in an ENV variable named `BANNERBEAR_AP
 bb = Bannerbear::Client.new
 ```
 
+### Get Account Info
+
+Return info about the Account / Project associated with this API key.
+
+```ruby
+bb.account
+```
+
 ### Create an Image
 
 To create an image you reference a template uid and a list of modifications. The default is async generation meaning the API will respond with a `pending` status and you can use `get_image` to retrieve the final image.
