@@ -24,6 +24,21 @@ module Bannerbear
     	post_response "/images", params.slice(:modifications, :webhook_url, :transparent, :render_pdf, :metadata).merge({:template => uid}), params[:synchronous]
     end
 
+    # Videos
+
+    def get_video(uid)
+    	get_response "/videos/#{uid}"
+    end
+
+    def list_videos(params = {:page => 1})
+    	get_response "/videos?#{URI.encode_www_form(params.slice(:page))}"
+    end
+
+    def create_video(uid, params = {:input_media_url => nil, :modifications => [], :blur => nil, :trim_to_length_in_seconds => nil, :webhook_url => nil, :metadata => nil, :frames => [], :frame_durations => [], :create_gif_preview => nil})
+    	post_response "/videos", params.slice(:input_media_url, :modifications, :blur, :trim_to_length_in_seconds, :webhook_url, :transparent, :metadata, :frames, :frame_durations, :create_gif_preview).merge({:video_template => uid})
+    end
+
+
 
     # Templates
 
@@ -75,7 +90,7 @@ module Bannerbear
     def patch_response(url, payload)
     	response = HTTParty.patch("#{BB_API_ENDPOINT}#{url}", 
     		body: payload.to_json,
-    		timeout: 3,
+    		timeout: 5,
     		headers: { 
     			'Authorization' => "Bearer #{@api_key}",
     			'Content-Type' => 'application/json'
@@ -84,9 +99,9 @@ module Bannerbear
     	JSON.parse(response.body)
     end
 
-    def post_response(url, payload, sync)
+    def post_response(url, payload, sync = false)
     	endpoint = BB_API_ENDPOINT
-    	timeout = 3
+    	timeout = 5
     	if sync == true
     		endpoint = BB_API_ENDPOINT_SYNCHRONOUS 
     		timeout = 15
