@@ -1,7 +1,7 @@
 require_relative 'lib/bannerbear/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "bannerbear-ruby"
+  spec.name          = "bannerbear"
   spec.version       = Bannerbear::VERSION
   spec.authors       = ["Jon Yongfook"]
   spec.email         = ["yongfook@gmail.com"]
