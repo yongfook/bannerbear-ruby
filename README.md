@@ -155,11 +155,80 @@ bb.list_videos
 
 - `page`: pagination (`integer`)
 
-### Templates, Template Sets and Video Templates
+### Other Models
 
-Various operations exist for handling templates.
+Other models have the same behaviors as above.
 
 ```ruby
+# Collections
+# Create multiple images in one API request
+bb.get_collection("collection uid")
+bb.list_collections(:page => 3)
+bb.create_collection("template set uid",
+  :synchronous => true,
+  :modifications => [
+    {
+      :name => "headline",
+      :text => "Hello World!"
+    }
+  ]
+) 
+#collection options: modifications, webhook_url, metadata, transparent, synchronous
+
+# Screenshots
+# Take screenshots of websites
+bb.get_screenshot("screenshot uid")
+bb.list_screenshots(:page => 3)
+bb.create_screenshot("https://www.bannerbear.com/",
+  :synchronous => true,
+  :width => 1000
+) 
+#screenshot options: width, height, mobile, webhook_url, synchronous
+
+# Animated Gifs
+# Create a slideshow style gif
+bb.get_animated_gif("gif uid")
+bb.list_animated_gifs(:page => 3)
+bb.create_animated_gif("template uid",
+  :frames => [
+    [ #frame 1 starts here
+      {
+        "name" : "layer1",
+        "text" : "This is my text"
+      },
+      {
+        "name" : "photo",
+        "image_url" : "https://www.pathtomyphoto.com/1.jpg"
+      }
+    ],
+    [ #frame 2 starts here
+      {
+        "name" : "layer1",
+        "text" : "This is my follow up text"
+      },
+      {
+        "name" : "photo",
+        "image_url" : "https://www.pathtomyphoto.com/2.jpg"
+      }
+    ]
+  ]
+) 
+#animated gif options: frames, frame_durations, input_media_url, fps, loop, webhook_url, metadata
+
+# Movies
+# Assemble video clips or still images into a single movie with transitions
+bb.get_movie("movie uid")
+bb.list_movies(:page => 3)
+bb.create_movie(:width => 800, :height => 800, :transition => "pixelize", :inputs => [
+  {
+    "asset_url": "https://images.unsplash.com/photo-1635910160061-4b688344bd20?w=500&q=60"
+  },
+  {
+    "asset_url": "https://i.imgur.com/fH7a5dO.png"
+  }
+])
+#movie options: width, height, transition, inputs, webhook_url, metadata
+
 # Templates
 bb.get_template("template uid")
 bb.update_template("template uid", :name => "New Template Name", :tags => ["portrait", "instagram"])
