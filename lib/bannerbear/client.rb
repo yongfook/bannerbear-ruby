@@ -141,7 +141,14 @@ module Bannerbear
     	get_response "/video_templates?#{URI.encode_www_form(params.slice(:page))}"
     end
 
+    # Signed URLS
 
+    def generate_signed_url(base_id, params = {})
+      base = "https://ondemand.bannerbear.com/signedurl/#{base_id}/image.jpg"
+      query = "?modifications=" + Base64.urlsafe_encode64(params[:modifications].to_json, :padding => false)
+      signature = OpenSSL::HMAC.hexdigest("SHA256", @api_key, base + query)
+      return base + query + "&s=" + signature
+    end
 
 
     private

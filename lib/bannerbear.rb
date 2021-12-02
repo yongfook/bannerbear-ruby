@@ -1,4 +1,6 @@
 require "httparty"
+require "openssl"
+require "base64"
 require "bannerbear/version"
 require "bannerbear/client"
 
