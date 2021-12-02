@@ -58,6 +58,8 @@ bb.account
 
 ### Images
 
+#### Create an Image
+
 To create an image you reference a template uid and a list of modifications. The default is async generation meaning the API will respond with a `pending` status and you can use `get_image` to retrieve the final image.
 
 ```ruby
@@ -93,7 +95,7 @@ bb.create_image("template uid",
 )
 ```
 
-#### Options
+##### Options
 
 - `modifications`: an array of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
 - `webhook_url`: a webhook url to post the final image object to (`string`)
@@ -102,13 +104,13 @@ bb.create_image("template uid",
 - `render_pdf`: render a PDF in addition to an image (`boolean`)
 - `metadata`: include any metadata to reference at a later point (`string`)
 
-### Get an Image
+#### Get an Image
 
 ```ruby
 bb.get_image("image uid")
 ```
 
-### List all Images
+#### List all Images
 
 ```ruby
 bb.list_images
@@ -118,12 +120,14 @@ bb.list_images
 bb.list_images(:page => 10)
 ```
 
-#### Options
+##### Options
 
 - `page`: pagination (`integer`)
 - `limit`: return n images per page (`integer`)
 
 ### Videos
+
+#### Create a Video
 
 To create a video you reference a *video template uid*, an input media and a list of modifications. Videos are created async - use `get_video` to retrieve the final video. 
 
@@ -139,7 +143,7 @@ bb.create_video("video template uid",
 )
 ```
 
-#### Options
+##### Options
 
 - `input_media_url`: a url to a publicly available video file you want to import (`string`)
 - `modifications`: an array of modifications you would like to make to the video overlay (`array`)
@@ -154,19 +158,39 @@ If your video is using the "Multi Overlay" build pack then you can pass in a set
 - `frames`: an array of sets of `modifications` (`array`)
 - `frame_durations`: specify the duration of each frame (`array`)
 
-### Get a Video
+#### Get a Video
 
 ```ruby
 bb.get_video("video uid")
 ```
 
-### List all Videos
+#### Update a Video
+
+Updating a video is only relevant under specific conditions. Video Templates using the build pack `transcribe` and set to manual approval (via the dashboard) will result in videos that enter a `pending_approval` status. At this point, the video is waiting for approval before final rendering. The purpose of this is to check the transcript is correct, make any changes, and approve the video for rendering.
+
+```ruby
+bb.update_video("video uid",
+  :approved => true,
+  :transcription => [
+    "This is a new transcription",
+    "It must contain the same number of lines",
+    "As the previous transcription"
+  ]
+)
+```
+
+##### Options
+
+- `approved`: approve the video for rendering (`boolean`)
+- `transcription`: an array of strings to represent the new transcription (will overwrite the existing one) (`array`)
+
+#### List all Videos
 
 ```ruby
 bb.list_videos
 ```
 
-#### Options
+##### Options
 
 - `page`: pagination (`integer`)
 
@@ -188,7 +212,7 @@ bb.create_collection("template set uid",
 ) 
 ```
 
-#### Options for `create_collection`
+##### Options for `create_collection`
 
 - `modifications`: an array of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
 - `webhook_url`: a webhook url to post the final collection object to (`string`)
@@ -229,7 +253,7 @@ bb.create_animated_gif("template uid",
 ) 
 ```
 
-#### Options for `create_animated_gif`
+##### Options for `create_animated_gif`
 
 - `frames`: an array of arrays of [modifications](https://developers.bannerbear.com/#post-v2-images) you would like to make (`array`)
 - `frame_durations`: an array of times (in seconds) to show each frame (`array`)
@@ -256,7 +280,7 @@ bb.create_movie(:width => 800, :height => 800, :transition => "pixelize", :input
 ])
 ```
 
-#### Options for `create_movie`
+##### Options for `create_movie`
 
 - `width`: the movie width in pixels (`integer`)
 - `height`: the movie height in pixels (`integer`)
@@ -279,7 +303,7 @@ bb.create_screenshot("https://www.bannerbear.com/",
 ) 
 ```
 
-#### Options for `create_screenshot`
+##### Options for `create_screenshot`
 
 - `width`: the desired screenshot width in pixels (`integer`)
 - `height`: the desired screenshot height in pixels (`integer`)
