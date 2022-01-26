@@ -1,4 +1,4 @@
-# Bannerbear
+# Bannerbear Ruby
 
 Ruby wrapper for the [Bannerbear API](https://developers.bannerbear.com) - an image and video generation service.
 
