@@ -109,8 +109,8 @@ module Bannerbear
 
     # Templates
 
-    def get_template(uid)
-    	get_response "/templates/#{uid}"
+    def get_template(uid, params = {})
+    	get_response "/templates/#{uid}?#{URI.encode_www_form(params.slice(:extended))}"
     end
 
     def update_template(uid, payload = {})
@@ -118,17 +118,17 @@ module Bannerbear
     end
 
     def list_templates(params = {})
-    	get_response "/templates?#{URI.encode_www_form(params.slice(:page, :tag, :limit, :name))}"
+    	get_response "/templates?#{URI.encode_www_form(params.slice(:page, :tag, :limit, :name, :extended))}"
     end
 
     # Template Sets
 
-    def get_template_set(uid)
-    	get_response "/template_sets/#{uid}"
+    def get_template_set(uid, params = {})
+    	get_response "/template_sets/#{uid}?#{URI.encode_www_form(params.slice(:extended))}"
     end
 
     def list_template_sets(params = {})
-    	get_response "/template_sets?#{URI.encode_www_form(params.slice(:page))}"
+    	get_response "/template_sets?#{URI.encode_www_form(params.slice(:page, :extended))}"
     end
 
     # Video Templates
