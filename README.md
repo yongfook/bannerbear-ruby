@@ -20,7 +20,7 @@ Or install it yourself as:
 
 ## V5 API
 
-The V5 API is a new generation of the Bannerbear API. **V5 API keys do not work with V2 endpoints, and V2 API keys do not work with V5 endpoints** — you must use the right client class for your key.
+The [V5 API](https://developers.bannerbear.com/v5/) is a new generation of the Bannerbear API. **V5 API keys do not work with V2 endpoints, and V2 API keys do not work with V5 endpoints** — you must use the right client class for your key.
 
 For the **V5 API**, use `Bannerbear::V5::Client` (this section).
 For the **legacy V2 API**, see [Usage](#usage) below — that section is unchanged.
