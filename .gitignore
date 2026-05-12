@@ -6,3 +6,4 @@
 /pkg/
 /spec/reports/
 /tmp/
+/smoke_test_v5.rb
