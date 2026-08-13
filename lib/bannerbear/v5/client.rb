@@ -21,8 +21,16 @@ module Bannerbear
         get_response "/image_templates/#{uid}"
       end
 
+      def create_image_template(payload = {})
+        post_response "/image_templates", payload.slice(:name, :description, :tags, :width, :height, :config)
+      end
+
       def update_image_template(uid, payload = {})
-        patch_response "/image_templates/#{uid}", payload.slice(:name, :description, :tags)
+        patch_response "/image_templates/#{uid}", payload.slice(:name, :description, :tags, :width, :height, :config)
+      end
+
+      def delete_image_template(uid)
+        delete_response "/image_templates/#{uid}"
       end
 
       # Images
@@ -37,6 +45,92 @@ module Bannerbear
 
       def create_image(uid, payload = {})
         post_response "/images", payload.slice(:modifications, :formats, :scale, :dpi, :quality, :proxy, :metadata, :version).merge({:template => uid}), payload[:sync]
+      end
+
+      # Tools
+      #
+      # Every tool is asynchronous: the POST returns a pending tool job. Poll
+      # get_tool_job until the status is "completed" or "failed", or subscribe
+      # to a webhook with the resource "tool_job".
+
+      TOOL_PARAMS = {
+        "remove_bg"              => [:image_url],
+        "create_pdf"             => [:urls],
+        "trim_video"             => [:video_url, :start, :end],
+        "concat_videos"          => [:video_urls, :width, :height],
+        "resize_video"           => [:video_url, :width, :height, :fit],
+        "crop_video"             => [:video_url, :x, :y, :width, :height],
+        "overlay_video"          => [:base_video_url, :overlay_video_url, :x, :y, :scale, :start],
+        "overlay_image"          => [:video_url, :image_url, :x, :y, :opacity],
+        "subtitle_video"         => [:video_url, :language, :font, :font_size, :color, :bold, :italic,
+                                     :outline_color, :outline_width, :shadow_size, :shadow_color,
+                                     :background_style, :background_color, :alignment],
+        "generate_voiceover"     => [:text, :voice],
+        "add_audio"              => [:video_url, :audio_url, :mode, :volume, :loop, :ducking],
+        "add_cover_art"          => [:video_url, :image_url],
+        "create_video_slideshow" => [:image_urls, :slide_duration, :transition, :transition_duration, :width, :height],
+        "apply_color_filter"     => [:video_url, :filter],
+        "soften_video"           => [:video_url, :strength]
+      }.freeze
+
+      def create_tool_job(tool, payload = {})
+        allowed = TOOL_PARAMS[tool.to_s]
+        raise ArgumentError, "unknown tool: #{tool.inspect}" if allowed.nil?
+        post_response "/tools/#{tool}", payload.slice(*allowed, :metadata)
+      end
+
+      # Defines one method per tool, e.g. remove_bg(payload) or trim_video(payload).
+      TOOL_PARAMS.each_key do |tool|
+        define_method(tool) { |payload = {}| create_tool_job(tool, payload) }
+      end
+
+      # Tool Jobs
+
+      def list_tool_jobs(params = {})
+        get_response "/tool_jobs?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_tool_job(uid)
+        get_response "/tool_jobs/#{uid}"
+      end
+
+      # Assets
+
+      def list_assets(params = {})
+        get_response "/assets?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_asset(uid)
+        get_response "/assets/#{uid}"
+      end
+
+      # Uploads raw file bytes (max 5MB). content_type must be the mime type of
+      # the data, e.g. "image/png" or "video/mp4". Uploads are deduplicated per
+      # workspace by SHA-256, so re-uploading the same bytes returns the
+      # existing asset instead of creating a duplicate.
+      def upload_asset(data, content_type)
+        upload_response "/assets", data, content_type
+      end
+
+      # Returns a map of SHA-256 content hash => asset (or nil when the hash is
+      # not stored in this workspace). Max 100 hashes per call.
+      def check_assets(content_hashes)
+        post_response "/assets/check", { :content_hashes => content_hashes }
+      end
+
+      # Publications
+
+      def list_publications(params = {})
+        get_response "/publications?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_publication(uid)
+        get_response "/publications/#{uid}"
+      end
+
+      # Clones a publication into the workspace as a new image template.
+      def install_publication(uid)
+        post_response "/publications/#{uid}/install", {}
       end
 
       # Batches
@@ -176,6 +270,20 @@ module Bannerbear
           headers: {
             'Authorization' => "Bearer #{@api_key}",
             'Content-Type' => 'application/json'
+          }
+        )
+        body = JSON.parse(response.body)
+        return {"error" => body['message'], "code" => response.code} if response.code >= 400
+        return body
+      end
+
+      def upload_response(url, data, content_type)
+        response = HTTParty.post("#{BB_API_ENDPOINT}#{url}",
+          body: data,
+          timeout: 30,
+          headers: {
+            'Authorization' => "Bearer #{@api_key}",
+            'Content-Type' => content_type
           }
         )
         body = JSON.parse(response.body)
