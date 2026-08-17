@@ -47,6 +47,74 @@ module Bannerbear
         post_response "/images", payload.slice(:modifications, :formats, :scale, :dpi, :quality, :proxy, :metadata, :version).merge({:template => uid}), payload[:sync]
       end
 
+      # Animation Templates
+
+      def list_animation_templates(params = {})
+        get_response "/animation_templates?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_animation_template(uid)
+        get_response "/animation_templates/#{uid}"
+      end
+
+      def create_animation_template(payload = {})
+        post_response "/animation_templates", payload.slice(:name, :description, :tags, :width, :height, :frame_rate)
+      end
+
+      def update_animation_template(uid, payload = {})
+        patch_response "/animation_templates/#{uid}", payload.slice(:name, :description, :tags, :width, :height, :frame_rate)
+      end
+
+      def delete_animation_template(uid)
+        delete_response "/animation_templates/#{uid}"
+      end
+
+      # Animations
+      #
+      # Rendering is always asynchronous — there is no synchronous host for
+      # animations. Poll get_animation until the status is "completed" or
+      # "failed", or subscribe to a webhook with the resource "animation".
+
+      def list_animations(params = {})
+        get_response "/animations?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_animation(uid)
+        get_response "/animations/#{uid}"
+      end
+
+      def create_animation(uid, payload = {})
+        post_response "/animations", payload.slice(:modifications, :formats, :metadata).merge({:template => uid})
+      end
+
+      # Workflows
+
+      def list_workflows(params = {})
+        get_response "/workflows?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_workflow(uid)
+        get_response "/workflows/#{uid}"
+      end
+
+      # Workflow Runs
+      #
+      # A run is asynchronous. Poll get_workflow_run until the status is
+      # "completed" or "failed", or subscribe to a webhook with the resource
+      # "workflow_run".
+
+      def list_workflow_runs(params = {})
+        get_response "/workflow_runs?#{URI.encode_www_form(params.slice(:page))}"
+      end
+
+      def get_workflow_run(uid)
+        get_response "/workflow_runs/#{uid}"
+      end
+
+      def create_workflow_run(uid, payload = {})
+        post_response "/workflow_runs", payload.slice(:inputs).merge({:workflow => uid})
+      end
+
       # Tools
       #
       # Every tool is asynchronous: the POST returns a pending tool job. Poll
@@ -57,11 +125,13 @@ module Bannerbear
         "remove_bg"              => [:image_url],
         "create_pdf"             => [:urls],
         "trim_video"             => [:video_url, :start, :end],
-        "concat_videos"          => [:video_urls, :width, :height],
+        "concat_videos"          => [:video_urls, :width, :height, :fps],
         "resize_video"           => [:video_url, :width, :height, :fit],
         "crop_video"             => [:video_url, :x, :y, :width, :height],
-        "overlay_video"          => [:base_video_url, :overlay_video_url, :x, :y, :scale, :start],
-        "overlay_image"          => [:video_url, :image_url, :x, :y, :opacity],
+        # Place the overlay with either :position (+ optional :margin) or :x/:y,
+        # not both.
+        "overlay_video"          => [:base_video_url, :overlay_video_url, :x, :y, :position, :margin, :scale, :start],
+        "overlay_image"          => [:video_url, :image_url, :x, :y, :position, :margin, :opacity],
         "subtitle_video"         => [:video_url, :language, :font, :font_size, :color, :bold, :italic,
                                      :outline_color, :outline_width, :shadow_size, :shadow_color,
                                      :background_style, :background_color, :alignment],
@@ -158,11 +228,11 @@ module Bannerbear
       end
 
       def create_webhook(payload = {})
-        post_response "/webhooks", payload.slice(:name, :url, :resource, :event, :status, :scope, :templates)
+        post_response "/webhooks", payload.slice(:name, :url, :resource, :event, :status)
       end
 
       def update_webhook(uid, payload = {})
-        patch_response "/webhooks/#{uid}", payload.slice(:name, :url, :resource, :event, :status, :scope, :templates)
+        patch_response "/webhooks/#{uid}", payload.slice(:name, :url, :resource, :event, :status)
       end
 
       def delete_webhook(uid)
